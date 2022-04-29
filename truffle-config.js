@@ -28,6 +28,7 @@ const HDWalletProvider = require("@truffle/hdwallet-provider");
 
 const MNEMONIC = process.env.MNEMONIC
 const ALCHEMY = process.env.ALCHEMY
+const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
 
 module.exports = {
   /**
@@ -39,6 +40,7 @@ module.exports = {
    *
    * $ truffle test --network <network-name>
    */
+   plugins: ['truffle-plugin-verify'],
    networks: {
     development: {
       host: '127.0.0.1', // Localhost (default: none)
@@ -54,6 +56,15 @@ module.exports = {
       timeoutBlocks: 200,
       skipDryRun: true,
     },
+    live: {
+      provider: function() { 
+        return new HDWalletProvider(MNEMONIC, ALCHEMY);
+       },
+      network_id: 1,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true,
+    },
     // maticmumbai: {
     //   provider: () => new HDWalletProvider(mnemonic, alchemyURL),
     //   network_id: 80001,
@@ -65,6 +76,10 @@ module.exports = {
     //   provider: () => new HDWalletProvider(mnemonic, alchemyURL),
     //   network_id: 137,
     // },
+  },
+
+  api_keys: {
+    etherscan: ETHERSCAN_API_KEY,
   },
 
   // Set default mocha options here, use special reporters etc.
